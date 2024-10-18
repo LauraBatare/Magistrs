@@ -41,7 +41,6 @@ data_group2 <- data_group %>%
   arrange(year)
 
 print(colnames(data_group2))
-
 write.xlsx(data_group2, "stacijas.xlsx")
 
 
@@ -155,10 +154,8 @@ b <- data.frame(Reduce(rbind, b)) %>%
   select(-layer_from, -layer_to, -`Depth_minLimit.m.`)
 
 #izmērs
-
 size <- c("<0.3" = 0.25, "0.3-0.4" = 0.35, "0.4-0.5" = 0.45, "0.5-0.6" = 0.55,
           "0.6-0.8" = 0.7, "0.8-1.0" = 0.9, ">1.0" = 1)
-
 data3_filtered <- data3_filtered %>%
   mutate(size_class_numeric = size[as.character(SizeClass)])
 
@@ -175,8 +172,12 @@ data3_weighted_avg_size <- data3_counts %>%
 print(data3_weighted_avg_size)
 
 
+ggplot(data2_filtered, aes(x = size_class_numeric)) +                  #izmēru sadalījums
+  geom_histogram(binwidth = 0.1, fill = "white", color = "black") +
+  labs(x = "Size Class", y = "Frequency") +
+  theme_minimal()
 
-ggplot(data3_weighted_avg_size, aes(x = Year, y = weighted_avg_size)) +
+ggplot(data3_weighted_avg_size, aes(x = Year, y = weighted_avg_size)) + 
   geom_point() +                
   geom_line() +  
   geom_smooth(method = "lm", se = TRUE) + 
@@ -202,8 +203,7 @@ mean_size<- data_filtered%>%
     total_abundance = sum(`abundance-AB`, na.rm = TRUE),  
     mean_size = total_biomass / total_abundance,          
     .groups = 'drop'
-  )
-  
+  )  
 print(mean_size)
 
 ggplot(mean_size, aes(x = Year, y = mean_size)) +
@@ -211,16 +211,11 @@ ggplot(mean_size, aes(x = Year, y = mean_size)) +
   geom_smooth(method = "lm", se = TRUE) +  
   labs( x = "Year", y = "Mean size") +
   theme_minimal() +
-  theme(
-    plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
-    axis.title.x = element_text(size = 12),
-    axis.title.y = element_text(size = 12)
-  )
+  theme()
 
 
 
-
-
+#########################################################################
 #skabeklis
 
 skabeklis <- read_excel("skabeklis.xlsx")
